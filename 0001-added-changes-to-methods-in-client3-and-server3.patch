@@ -1,0 +1,60 @@
+From f5a62c4adf96d1e78ab8dd99642e55e5ba0c1e89 Mon Sep 17 00:00:00 2001
+From: AaronShinu <aaronshinu23@gmail.com>
+Date: Fri, 23 Aug 2024 16:11:13 +0100
+Subject: [PATCH] added changes to methods in client3 and server3
+
+---
+ client3.py | 11 ++++++-----
+ server3.py |  1 -
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/client3.py b/client3.py
+index 3fc09b7..de449e3 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,14 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price)/2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+-    """ Get ratio of price_a and price_b """
+-    """ ------------- Update this function ------------- """
+-    return 1
++    if (price_b == 0):
++        return 
++    return price_a/price_b
+ 
+ 
+ # Main
+@@ -51,9 +51,10 @@ if __name__ == "__main__":
+     for _ in iter(range(N)):
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+-        """ ----------- Update to get the ratio --------------- """
++        prices = {}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            price[stock] = price 
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+         print("Ratio %s" % getRatio(price, price))
+diff --git a/server3.py b/server3.py
+index 1836de2..b428b37 100644
+--- a/server3.py
++++ b/server3.py
+@@ -32,7 +32,6 @@ from random import normalvariate, random
+ from socketserver import ThreadingMixIn
+ 
+ import dateutil.parser
+-
+ ################################################################################
+ #
+ # Config
+-- 
+2.44.0.windows.1
+
